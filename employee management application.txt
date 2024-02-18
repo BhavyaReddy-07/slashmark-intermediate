@@ -1,0 +1,164 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Employee {
+    private int id;
+    private String name;
+    private String department;
+    private String position;
+    private double salary;
+
+    public Employee(int id, String name, String department, String position, double salary) {
+        this.id = id;
+        this.name = name;
+        this.department = department;
+        this.position = position;
+        this.salary = salary;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", position='" + position + '\'' +
+                ", salary=" + salary +
+                '}';
+    }
+}
+
+class EmployeeManagementSystem {
+    private List<Employee> employees;
+
+    public EmployeeManagementSystem() {
+        this.employees = new ArrayList<>();
+    }
+
+    public void addEmployee(Employee employee) {
+        employees.add(employee);
+    }
+
+    public List<Employee> getAllEmployees() {
+        return employees;
+    }
+
+    public Employee findEmployeeById(int id) {
+        for (Employee employee : employees) {
+            if (employee.getId() == id) {
+                return employee;
+            }
+        }
+        return null;
+    }
+
+    public void updateEmployee(Employee employee) {
+        for (int i = 0; i < employees.size(); i++) {
+            if (employees.get(i).getId() == employee.getId()) {
+                employees.set(i, employee);
+                break;
+            }
+        }
+    }
+
+    public void deleteEmployee(int id) {
+        employees.removeIf(employee -> employee.getId() == id);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        EmployeeManagementSystem employeeManagementSystem = new EmployeeManagementSystem();
+
+        while (true) {
+            System.out.println("1. Add Employee");
+            System.out.println("2. View All Employees");
+            System.out.println("3. Update Employee");
+            System.out.println("4. Delete Employee");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter employee ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Enter employee name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter employee department: ");
+                    String department = scanner.nextLine();
+                    System.out.print("Enter employee position: ");
+                    String position = scanner.nextLine();
+                    System.out.print("Enter employee salary: ");
+                    double salary = scanner.nextDouble();
+                    scanner.nextLine(); // Consume newline
+                    Employee newEmployee = new Employee(id, name, department, position, salary);
+                    employeeManagementSystem.addEmployee(newEmployee);
+                    System.out.println("Employee added successfully!");
+                    break;
+                case 2:
+                    List<Employee> allEmployees = employeeManagementSystem.getAllEmployees();
+                    for (Employee employee : allEmployees) {
+                        System.out.println(employee);
+                    }
+                    break;
+                case 3:
+                    System.out.print("Enter employee ID to update: ");
+                    int updateId = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    Employee foundEmployee = employeeManagementSystem.findEmployeeById(updateId);
+                    if (foundEmployee != null) {
+                        System.out.print("Enter new salary for " + foundEmployee.getName() + ": ");
+                        double newSalary = scanner.nextDouble();
+                        scanner.nextLine(); // Consume newline
+                        foundEmployee.setSalary(newSalary);
+                        employeeManagementSystem.updateEmployee(foundEmployee);
+                        System.out.println("Employee updated successfully!");
+                    } else {
+                        System.out.println("Employee with ID " + updateId + " not found.");
+                    }
+                    break;
+                case 4:
+                    System.out.print("Enter employee ID to delete: ");
+                    int deleteId = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    employeeManagementSystem.deleteEmployee(deleteId);
+                    System.out.println("Employee deleted successfully!");
+                    break;
+                case 5:
+                    System.out.println("Exiting application...");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice! Please enter a valid option.");
+            }
+        }
+    }
+}
